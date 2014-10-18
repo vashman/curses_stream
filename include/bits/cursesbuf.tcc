@@ -1,45 +1,46 @@
-#ifndef CURSES_STREAM_CURSESBUF_HPP
-#define CURSES_STREAM_CURSESBUF_HPP
+#ifndef CURSTREAM_CURSESBUF_HPP
+#define CURSTREAM_CURSESBUF_HPP
 
-namespace curses_stream {
-template <typename charT, typename traits>
-std::size_t basic_cursesbuf<charT,traits>::active = 0;
+namespace curstream {
 
-template <typename charT, typename traits>
-basic_cursesbuf<charT,traits>::basic_cursesbuf(){
-	if (basic_cursesbuf<charT,traits>::active < 1){
+template <typename CharT, typename traits>
+std::size_t basic_cursesbuf<CharT,traits>::active = 0;
+
+template <typename CharT, typename traits>
+basic_cursesbuf<CharT,traits>::basic_cursesbuf(){
+	if (basic_cursesbuf<CharT,traits>::active < 1){
 	windows.push_back(initscr());
-	++basic_cursesbuf<charT,traits>::active;
+	++basic_cursesbuf<CharT,traits>::active;
 	this->active_win = 0;
 	}
 }
 
-template <typename charT, typename traits>
+template <typename CharT, typename traits>
 void
-basic_cursesbuf<charT,traits>::set_border(
-  charT _left
-, charT _right
-, charT _top
-, charT _bottom
-, charT _00c
-, charT _01c
-, charT _10c
-, charT _11c
+basic_cursesbuf<CharT,traits>::set_border(
+  CharT _left
+, CharT _right
+, CharT _top
+, CharT _bottom
+, CharT _00c
+, CharT _01c
+, CharT _10c
+, CharT _11c
 ){
 wborder(this->windows[this->active_win]
   , _left, _right, _top, _bottom, _00c, _01c, _10c, _11c);
 }
 
-template <typename charT, typename traits>
+template <typename CharT, typename traits>
 std::size_t
-basic_cursesbuf<charT,traits>::total_win(
+basic_cursesbuf<CharT,traits>::total_win(
 ){
 return this->windows.size();
 }
 
-template <typename charT, typename traits>
+template <typename CharT, typename traits>
 void
-basic_cursesbuf<charT,traits>::set_cbreak(
+basic_cursesbuf<CharT,traits>::set_cbreak(
   bool _b
 ){
 	if (_b){
@@ -49,9 +50,9 @@ basic_cursesbuf<charT,traits>::set_cbreak(
 	}
 }
 
-template <typename charT, typename traits>
+template <typename CharT, typename traits>
 void
-basic_cursesbuf<charT,traits>::set_echo(
+basic_cursesbuf<CharT,traits>::set_echo(
   bool _b
 ){
 	if (_b){
@@ -61,26 +62,27 @@ basic_cursesbuf<charT,traits>::set_echo(
 	}
 }
 
-template <typename charT, typename traits>
+template <typename CharT, typename traits>
 void
-basic_cursesbuf<charT,traits>::set_keypad(
+basic_cursesbuf<CharT,traits>::set_keypad(
   bool _b
 ){
-keypad(this->windows[0], (int)_b);
+keypad(this->windows[0], static_cast<int>(_b));
 }
 
 /* cursesstreambuf dtor */
-template <typename charT, typename traits>
-basic_cursesbuf<charT,traits>::~basic_cursesbuf(){
---basic_cursesbuf<charT,traits>::active;
-	if (basic_cursesbuf<charT,traits>::active == 0){
+template <typename CharT, typename traits>
+basic_cursesbuf<CharT,traits>::~basic_cursesbuf(
+){
+--basic_cursesbuf<CharT,traits>::active;
+	if (basic_cursesbuf<CharT,traits>::active == 0){
 	endwin();
 	}
 }
 
-template <typename charT, typename traits>
+template <typename CharT, typename traits>
 std::size_t
-basic_cursesbuf<charT,traits>::new_win(
+basic_cursesbuf<CharT,traits>::new_win(
   int _lines
 , int _cols
 , int _y
@@ -90,9 +92,9 @@ this->windows.push_back(newwin(_lines, _cols, _y, _x));
 return this->windows.size()-1;
 }
 
-template <typename charT, typename traits>
+template <typename CharT, typename traits>
 void
-basic_cursesbuf<charT,traits>::del_win(
+basic_cursesbuf<CharT,traits>::del_win(
   std::size_t _index
 ){
 	if (_index > 0){
@@ -100,9 +102,9 @@ basic_cursesbuf<charT,traits>::del_win(
 	}
 }
 
-template <typename charT, typename traits>
+template <typename CharT, typename traits>
 std::size_t
-basic_cursesbuf<charT,traits>::set_win(
+basic_cursesbuf<CharT,traits>::set_win(
   std::size_t _index
 ){
 	if (_index < this->windows.size()){
@@ -113,18 +115,18 @@ basic_cursesbuf<charT,traits>::set_win(
 return _index;
 }
 
-template <typename charT, typename traits>
-typename std::basic_streambuf<charT,traits>::int_type
-basic_cursesbuf<charT, traits>::sync(
+template <typename CharT, typename traits>
+typename std::basic_streambuf<CharT,traits>::int_type
+basic_cursesbuf<CharT, traits>::sync(
 ){
 wrefresh(this->windows[this->active_win]);
 return traits::to_int_type(0);
 }
 
-template <typename charT, typename traits>
-typename std::basic_streambuf<charT,traits>::pos_type
-basic_cursesbuf<charT, traits>::seekoff(
-  typename std::basic_streambuf<charT, traits>::off_type _off
+template <typename CharT, typename traits>
+typename std::basic_streambuf<CharT,traits>::pos_type
+basic_cursesbuf<CharT, traits>::seekoff(
+  typename std::basic_streambuf<CharT, traits>::off_type _off
 , std::ios_base::seekdir _way
 , std::ios_base::openmode _which
 ){
@@ -132,21 +134,21 @@ int y=0, x=0;
 x = getmaxx(this->windows[this->active_win]);
 y += _off/x;
 x = _off%x;
-	if (_way == ios_base::cur){
+	if (_way == std::ios_base::cur){
 	x += getcurx(windows[this->active_win]);
 	y += getcury(windows[this->active_win]);
 	}
-	if (_way == ios_base::end){
+	if (_way == std::ios_base::end){
 	x -= getmaxx(windows[this->active_win]);
 	y -= getmaxy(windows[this->active_win]);
 	}
 wmove(windows[this->active_win], y, x);
 }
 
-template <typename charT, typename traits>
-typename std::basic_streambuf<charT,traits>::pos_type
-basic_cursesbuf<charT, traits>::seekpos(
-  typename std::basic_streambuf<charT, traits>::off_type _off
+template <typename CharT, typename traits>
+typename std::basic_streambuf<CharT,traits>::pos_type
+basic_cursesbuf<CharT, traits>::seekpos(
+  typename std::basic_streambuf<CharT, traits>::off_type _off
 , std::ios_base::openmode _which
 ){
 int y=0, x=0;
@@ -156,49 +158,49 @@ x = _off%x;
 wmove(this->windows[this->active_win], y, x);
 }
 
-template <typename charT, typename traits>
-typename std::basic_streambuf<charT,traits>::int_type
-basic_cursesbuf<charT, traits>::overflow(
-  typename std::basic_streambuf<charT, traits>::int_type _char
+template <typename CharT, typename traits>
+typename std::basic_streambuf<CharT,traits>::int_type
+basic_cursesbuf<CharT, traits>::overflow(
+  typename std::basic_streambuf<CharT, traits>::int_type _char
 ){
 waddch(this->windows[this->active_win], traits::to_char_type(_char));
 return _char;
 }
 
-template <typename charT, typename traits>
-typename std::basic_streambuf<charT,traits>::int_type
-basic_cursesbuf<charT, traits>::uflow(
+template <typename CharT, typename traits>
+typename std::basic_streambuf<CharT,traits>::int_type
+basic_cursesbuf<CharT, traits>::uflow(
 ){
 return this->underflow(); // auto advanced position
 }
 
-template <typename charT, typename traits>
+template <typename CharT, typename traits>
 std::streamsize
-basic_cursesbuf<charT,traits>::xsputn(
-  typename std::basic_streambuf<charT, traits>::char_type * _str
+basic_cursesbuf<CharT,traits>::xsputn(
+  typename std::basic_streambuf<CharT, traits>::char_type * _str
 , std::streamsize _size
 ){
 wprintw(this->windows[this->active_win], _str);
 return _size;
 }
 
-template <typename charT, typename traits>
-typename std::basic_streambuf<charT,traits>::int_type
-basic_cursesbuf<charT, traits>::underflow(
+template <typename CharT, typename traits>
+typename std::basic_streambuf<CharT,traits>::int_type
+basic_cursesbuf<CharT, traits>::underflow(
 ){
-charT ch = wgetch(this->windows[this->active_win]);
+CharT ch = wgetch(this->windows[this->active_win]);
 return (ch != ERR) ? traits::to_int_type(ch) : traits::eof();
 }
 
-template <typename charT, typename traits>
+template <typename CharT, typename traits>
 std::streamsize
-basic_cursesbuf<charT,traits>::xsgetn(
-  typename std::basic_streambuf<charT, traits>::char_type * _str
+basic_cursesbuf<CharT,traits>::xsgetn(
+  typename std::basic_streambuf<CharT, traits>::char_type * _str
 , std::streamsize _size
 ){
 wgetstr(windows[this->active_win], _str);
 return _size;
 }
 
-} /* curses_stream */
+} /* curstream */
 #endif
