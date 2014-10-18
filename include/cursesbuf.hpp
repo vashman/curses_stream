@@ -14,11 +14,11 @@ extern "C"{
 namespace curses_stream {
 
 template <typename charT, typename traits = std::char_traits<charT> >
-class basic_ncursesbuf : public basic_streambuf<charT>{
+class basic_cursesbuf : public basic_streambuf<charT>{
 public:
-  basic_ncursesbuf();
+  basic_cursesbuf();
 
-  ~basic_ncursesbuf();
+  ~basic_cursesbuf();
 
   size_t
   new_win(int,int,int,int);
@@ -95,7 +95,7 @@ private:
 	std::size_t active_win;
 };
 
-typedef basic_ncursesbuf<char> ncursesbuf;
+typedef basic_cursesbuf<char> cursesbuf;
 } /* curses_stream */
 #include "bits/cursesbuf.tcc"
 #endif

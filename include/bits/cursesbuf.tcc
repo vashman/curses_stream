@@ -3,20 +3,20 @@
 
 namespace curses_stream {
 template <typename charT, typename traits>
-std::size_t basic_ncursesbuf<charT,traits>::active = 0;
+std::size_t basic_cursesbuf<charT,traits>::active = 0;
 
 template <typename charT, typename traits>
-basic_ncursesbuf<charT,traits>::basic_ncursesbuf(){
-	if (basic_ncursesbuf<charT,traits>::active < 1){
+basic_cursesbuf<charT,traits>::basic_cursesbuf(){
+	if (basic_cursesbuf<charT,traits>::active < 1){
 	windows.push_back(initscr());
-	++basic_ncursesbuf<charT,traits>::active;
+	++basic_cursesbuf<charT,traits>::active;
 	this->active_win = 0;
 	}
 }
 
 template <typename charT, typename traits>
 void
-basic_ncursesbuf<charT,traits>::set_border(
+basic_cursesbuf<charT,traits>::set_border(
   charT _left
 , charT _right
 , charT _top
@@ -32,14 +32,14 @@ wborder(this->windows[this->active_win]
 
 template <typename charT, typename traits>
 std::size_t
-basic_ncursesbuf<charT,traits>::total_win(
+basic_cursesbuf<charT,traits>::total_win(
 ){
 return this->windows.size();
 }
 
 template <typename charT, typename traits>
 void
-basic_ncursesbuf<charT,traits>::set_cbreak(
+basic_cursesbuf<charT,traits>::set_cbreak(
   bool _b
 ){
 	if (_b){
@@ -51,7 +51,7 @@ basic_ncursesbuf<charT,traits>::set_cbreak(
 
 template <typename charT, typename traits>
 void
-basic_ncursesbuf<charT,traits>::set_echo(
+basic_cursesbuf<charT,traits>::set_echo(
   bool _b
 ){
 	if (_b){
@@ -63,7 +63,7 @@ basic_ncursesbuf<charT,traits>::set_echo(
 
 template <typename charT, typename traits>
 void
-basic_ncursesbuf<charT,traits>::set_keypad(
+basic_cursesbuf<charT,traits>::set_keypad(
   bool _b
 ){
 keypad(this->windows[0], (int)_b);
@@ -71,16 +71,16 @@ keypad(this->windows[0], (int)_b);
 
 /* cursesstreambuf dtor */
 template <typename charT, typename traits>
-basic_ncursesbuf<charT,traits>::~basic_ncursesbuf(){
---basic_ncursesbuf<charT,traits>::active;
-	if (basic_ncursesbuf<charT,traits>::active == 0){
+basic_cursesbuf<charT,traits>::~basic_cursesbuf(){
+--basic_cursesbuf<charT,traits>::active;
+	if (basic_cursesbuf<charT,traits>::active == 0){
 	endwin();
 	}
 }
 
 template <typename charT, typename traits>
 std::size_t
-basic_ncursesbuf<charT,traits>::new_win(
+basic_cursesbuf<charT,traits>::new_win(
   int _lines
 , int _cols
 , int _y
@@ -92,7 +92,7 @@ return this->windows.size()-1;
 
 template <typename charT, typename traits>
 void
-basic_ncursesbuf<charT,traits>::del_win(
+basic_cursesbuf<charT,traits>::del_win(
   std::size_t _index
 ){
 	if (_index > 0){
@@ -102,7 +102,7 @@ basic_ncursesbuf<charT,traits>::del_win(
 
 template <typename charT, typename traits>
 std::size_t
-basic_ncursesbuf<charT,traits>::set_win(
+basic_cursesbuf<charT,traits>::set_win(
   std::size_t _index
 ){
 	if (_index < this->windows.size()){
@@ -115,7 +115,7 @@ return _index;
 
 template <typename charT, typename traits>
 typename std::basic_streambuf<charT,traits>::int_type
-basic_ncursesbuf<charT, traits>::sync(
+basic_cursesbuf<charT, traits>::sync(
 ){
 wrefresh(this->windows[this->active_win]);
 return traits::to_int_type(0);
@@ -123,7 +123,7 @@ return traits::to_int_type(0);
 
 template <typename charT, typename traits>
 typename std::basic_streambuf<charT,traits>::pos_type
-basic_ncursesbuf<charT, traits>::seekoff(
+basic_cursesbuf<charT, traits>::seekoff(
   typename std::basic_streambuf<charT, traits>::off_type _off
 , std::ios_base::seekdir _way
 , std::ios_base::openmode _which
@@ -145,7 +145,7 @@ wmove(windows[this->active_win], y, x);
 
 template <typename charT, typename traits>
 typename std::basic_streambuf<charT,traits>::pos_type
-basic_ncursesbuf<charT, traits>::seekpos(
+basic_cursesbuf<charT, traits>::seekpos(
   typename std::basic_streambuf<charT, traits>::off_type _off
 , std::ios_base::openmode _which
 ){
@@ -158,7 +158,7 @@ wmove(this->windows[this->active_win], y, x);
 
 template <typename charT, typename traits>
 typename std::basic_streambuf<charT,traits>::int_type
-basic_ncursesbuf<charT, traits>::overflow(
+basic_cursesbuf<charT, traits>::overflow(
   typename std::basic_streambuf<charT, traits>::int_type _char
 ){
 waddch(this->windows[this->active_win], traits::to_char_type(_char));
@@ -167,14 +167,14 @@ return _char;
 
 template <typename charT, typename traits>
 typename std::basic_streambuf<charT,traits>::int_type
-basic_ncursesbuf<charT, traits>::uflow(
+basic_cursesbuf<charT, traits>::uflow(
 ){
 return this->underflow(); // auto advanced position
 }
 
 template <typename charT, typename traits>
 std::streamsize
-basic_ncursesbuf<charT,traits>::xsputn(
+basic_cursesbuf<charT,traits>::xsputn(
   typename std::basic_streambuf<charT, traits>::char_type * _str
 , std::streamsize _size
 ){
@@ -184,7 +184,7 @@ return _size;
 
 template <typename charT, typename traits>
 typename std::basic_streambuf<charT,traits>::int_type
-basic_ncursesbuf<charT, traits>::underflow(
+basic_cursesbuf<charT, traits>::underflow(
 ){
 charT ch = wgetch(this->windows[this->active_win]);
 return (ch != ERR) ? traits::to_int_type(ch) : traits::eof();
@@ -192,7 +192,7 @@ return (ch != ERR) ? traits::to_int_type(ch) : traits::eof();
 
 template <typename charT, typename traits>
 std::streamsize
-basic_ncursesbuf<charT,traits>::xsgetn(
+basic_cursesbuf<charT,traits>::xsgetn(
   typename std::basic_streambuf<charT, traits>::char_type * _str
 , std::streamsize _size
 ){
