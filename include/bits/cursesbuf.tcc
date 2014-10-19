@@ -1,13 +1,24 @@
-#ifndef CURSTREAM_CURSESBUF_HPP
-#define CURSTREAM_CURSESBUF_HPP
+// cursesbuf template implementation
+
+//          Copyright Sundeep S. Sangha 2013 - 2014.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef CURSTREAM_CURSESBUF_TCC
+#define CURSTREAM_CURSESBUF_TCC
 
 namespace curstream {
 
+/* basic_cursesbuf active */
 template <typename CharT, typename traits>
 std::size_t basic_cursesbuf<CharT,traits>::active = 0;
 
+/* basic_cursesbuf ctor */
 template <typename CharT, typename traits>
-basic_cursesbuf<CharT,traits>::basic_cursesbuf(){
+basic_cursesbuf<CharT,traits>::basic_cursesbuf(
+)
+  : std::basic_streambuf<CharT,traits>() {
 	if (basic_cursesbuf<CharT,traits>::active < 1){
 	windows.push_back(initscr());
 	++basic_cursesbuf<CharT,traits>::active;
@@ -15,6 +26,7 @@ basic_cursesbuf<CharT,traits>::basic_cursesbuf(){
 	}
 }
 
+/* basic_cursesbuf set_border */
 template <typename CharT, typename traits>
 void
 basic_cursesbuf<CharT,traits>::set_border(
@@ -31,6 +43,7 @@ wborder(this->windows[this->active_win]
   , _left, _right, _top, _bottom, _00c, _01c, _10c, _11c);
 }
 
+/* basic_cursesbuf total_win */
 template <typename CharT, typename traits>
 std::size_t
 basic_cursesbuf<CharT,traits>::total_win(
@@ -38,6 +51,7 @@ basic_cursesbuf<CharT,traits>::total_win(
 return this->windows.size();
 }
 
+/* basic_cursesbuf set_cbreak */
 template <typename CharT, typename traits>
 void
 basic_cursesbuf<CharT,traits>::set_cbreak(
@@ -50,6 +64,7 @@ basic_cursesbuf<CharT,traits>::set_cbreak(
 	}
 }
 
+/* basic_cursesbuf set_echo */
 template <typename CharT, typename traits>
 void
 basic_cursesbuf<CharT,traits>::set_echo(
@@ -62,6 +77,7 @@ basic_cursesbuf<CharT,traits>::set_echo(
 	}
 }
 
+/* basic_cursesbuf set_keypad */
 template <typename CharT, typename traits>
 void
 basic_cursesbuf<CharT,traits>::set_keypad(
@@ -70,7 +86,7 @@ basic_cursesbuf<CharT,traits>::set_keypad(
 keypad(this->windows[0], static_cast<int>(_b));
 }
 
-/* cursesstreambuf dtor */
+/* basic_cursesbuf dtor */
 template <typename CharT, typename traits>
 basic_cursesbuf<CharT,traits>::~basic_cursesbuf(
 ){
@@ -80,6 +96,7 @@ basic_cursesbuf<CharT,traits>::~basic_cursesbuf(
 	}
 }
 
+/* basic_cursesbuf new_win */
 template <typename CharT, typename traits>
 std::size_t
 basic_cursesbuf<CharT,traits>::new_win(
@@ -92,6 +109,7 @@ this->windows.push_back(newwin(_lines, _cols, _y, _x));
 return this->windows.size()-1;
 }
 
+/* basic_cursesbuf del_win */
 template <typename CharT, typename traits>
 void
 basic_cursesbuf<CharT,traits>::del_win(
@@ -102,6 +120,7 @@ basic_cursesbuf<CharT,traits>::del_win(
 	}
 }
 
+/* basic_cursesbuf set_win*/
 template <typename CharT, typename traits>
 std::size_t
 basic_cursesbuf<CharT,traits>::set_win(
@@ -115,6 +134,7 @@ basic_cursesbuf<CharT,traits>::set_win(
 return _index;
 }
 
+/* basic_cursesbuf sync */
 template <typename CharT, typename traits>
 typename std::basic_streambuf<CharT,traits>::int_type
 basic_cursesbuf<CharT, traits>::sync(
@@ -143,12 +163,13 @@ x = _off%x;
 	y -= getmaxy(windows[this->active_win]);
 	}
 wmove(windows[this->active_win], y, x);
+return static_cast<typename std::basic_streambuf<CharT,traits>::pos_type>(_off);
 }
 
 template <typename CharT, typename traits>
 typename std::basic_streambuf<CharT,traits>::pos_type
 basic_cursesbuf<CharT, traits>::seekpos(
-  typename std::basic_streambuf<CharT, traits>::off_type _off
+  typename std::basic_streambuf<CharT, traits>::pos_type _off
 , std::ios_base::openmode _which
 ){
 int y=0, x=0;
@@ -156,6 +177,7 @@ x = getmaxx(this->windows[this->active_win]);
 y += _off/x;
 x = _off%x;
 wmove(this->windows[this->active_win], y, x);
+return static_cast<typename std::basic_streambuf<CharT,traits>::pos_type>(_off);
 }
 
 template <typename CharT, typename traits>
@@ -163,8 +185,12 @@ typename std::basic_streambuf<CharT,traits>::int_type
 basic_cursesbuf<CharT, traits>::overflow(
   typename std::basic_streambuf<CharT, traits>::int_type _char
 ){
-waddch(this->windows[this->active_win], traits::to_char_type(_char));
-return _char;
+/* waddch loses data because the int_type is converted to the ncurses
+   chtype which hold the character infomation, as well as other data
+   about the character.
+*/
+waddch(this->windows[this->active_win], static_cast<chtype>(traits::to_char_type(_char)));
+return traits::to_int_type(_char);
 }
 
 template <typename CharT, typename traits>
@@ -177,7 +203,7 @@ return this->underflow(); // auto advanced position
 template <typename CharT, typename traits>
 std::streamsize
 basic_cursesbuf<CharT,traits>::xsputn(
-  typename std::basic_streambuf<CharT, traits>::char_type * _str
+  const typename std::basic_streambuf<CharT, traits>::char_type * _str
 , std::streamsize _size
 ){
 wprintw(this->windows[this->active_win], _str);

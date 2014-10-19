@@ -158,4 +158,5 @@ typedef basic_icurses_stream<char> icurses_stream;
 typedef basic_iocurses_stream<char> curses_stream;
 
 } /* curstream */
+#include "bits/curses_stream.tcc"
 #endif

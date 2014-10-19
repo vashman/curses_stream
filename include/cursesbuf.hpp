@@ -1,5 +1,9 @@
+// c++ streambuf implementing curses like interface and functionality.
 
 //          Copyright Sundeep S. Sangha 2013 - 2014.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef CURSTREAM_CURSESBUF_HPP
 #define CURSTREAM_CURSESBUF_HPP
@@ -14,14 +18,30 @@ extern "C"{
 namespace curstream {
 
 template <typename CharT, typename traits = std::char_traits<CharT> >
-class basic_cursesbuf : public std::basic_streambuf<CharT>{
+class basic_cursesbuf : public std::basic_streambuf<CharT, traits>{
 public:
   basic_cursesbuf();
 
+#if __cplusplus >= 201103L
+  basic_cursesbuf(
+    basic_cursesbuf<CharT,traits> const &
+  ) = delete;
+
+  basic_cursesbuf &
+  operator=(
+    basic_cursesbuf<CharT,traits> const &
+  ) = delete;
+#endif
+
   ~basic_cursesbuf();
 
-  size_t
-  new_win(int,int,int,int);
+  std::size_t
+  new_win(
+    int
+  , int
+  , int
+  , int
+  );
 
   /* set_win
   set window return previous window id.
@@ -65,6 +85,8 @@ public:
   , CharT
   , CharT
   );
+
+private:
 //	virtual streamsize showmanyc();
 //	virtual void imbue(const locale&);
 //	virtual basic_streambuf* setbuf();
@@ -78,7 +100,7 @@ public:
 
   virtual typename std::basic_streambuf<CharT,traits>::pos_type
   seekpos(
-    typename std::basic_streambuf<CharT, traits>::off_type
+    typename std::basic_streambuf<CharT, traits>::pos_type
   , std::ios_base::openmode
   );
 
@@ -94,7 +116,7 @@ public:
 
   virtual std::streamsize
   xsputn(
-    typename std::basic_streambuf<CharT,traits>::char_type *
+    const typename std::basic_streambuf<CharT,traits>::char_type *
   , std::streamsize
   );
 
@@ -110,10 +132,9 @@ public:
   , std::streamsize
   );
 
-private:
 	static std::size_t active;
 
-	std::vector<WINDOW*> windows;
+	std::vector<WINDOW *> windows;
 
 	std::size_t active_win;
 };
