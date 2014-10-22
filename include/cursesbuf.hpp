@@ -132,11 +132,11 @@ private:
   , std::streamsize
   );
 
-	static std::size_t active;
+  static std::size_t active;
 
-	std::vector<WINDOW *> windows;
+  std::vector<WINDOW *> windows;
 
-	std::size_t active_win;
+  std::size_t active_win;
 };
 
 typedef basic_cursesbuf<char> cursesbuf;
