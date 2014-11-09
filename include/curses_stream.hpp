@@ -13,25 +13,27 @@
 
 namespace curstream {
 
-template <typename CharT, typename traits = std::char_traits<CharT> >
-class basic_ocurses_stream : public std::basic_ostream<CharT,traits>{
+template <typename charT, typename traits = std::char_traits<charT> >
+class basic_ocurses_stream : public std::basic_ostream<charT,traits>{
 public:
+  typedef basic_cursesbuf<charT,traits>::window_type window_type;
+
   basic_ocurses_stream(
-    basic_cursesbuf<CharT,traits> * _buf
-         = new basic_cursesbuf<CharT,traits>()
+    basic_cursesbuf<charT,traits> * _buf
+         = new basic_cursesbuf<charT,traits>()
   );
 
   ~basic_ocurses_stream();
 
-  basic_cursesbuf<CharT,traits> *
+  basic_cursesbuf<charT,traits> *
   rdbuf() const;
 
-  void
+  window_type
   set_win(
-    std::size_t
+    window_type
   );
 
-  void
+  window_type
   new_win(
     int
   , int
@@ -41,48 +43,50 @@ public:
 
   void
   del_win(
-    std::size_t
+    window_type
   );
 
-  std::size_t
-  total_win();
+  window_type
+  active_win();
 
   void
   set_border(
-    CharT
-  , CharT
-  , CharT
-  , CharT
-  , CharT
-  , CharT
-  , CharT
-  , CharT
+    charT
+  , charT
+  , charT
+  , charT
+  , charT
+  , charT
+  , charT
+  , charT
   );
 
 private:
-	//basic_ostream<CharT,traits>::basic_streambuf<CharT>* rdbuf(basic_streambuf<CharT>*);
+	//basic_ostream<charT,traits>::basic_streambuf<charT>* rdbuf(basic_streambuf<charT>*);
 };
 
-template <typename CharT, typename traits = std::char_traits<CharT> >
-class basic_icurses_stream : public std::basic_istream<CharT,traits>{
+template <typename charT, typename traits = std::char_traits<charT> >
+class basic_icurses_stream : public std::basic_istream<charT,traits>{
 public:
+  typedef basic_cursesbuf<charT,traits>::window_type window_type;
+
   basic_icurses_stream(
-    basic_cursesbuf<CharT,traits> * _buf
-        = new basic_cursesbuf<CharT,traits>()
+    basic_cursesbuf<charT,traits> * _buf
+        = new basic_cursesbuf<charT,traits>()
   );
 
   ~basic_icurses_stream();
 
-  basic_cursesbuf<CharT,traits> *
+  basic_cursesbuf<charT,traits> *
   rdbuf() const;
 
-  void
+  window_type
   set_win(
-    std::size_t
+    window_type
   );
 
-  std::size_t
-  total_win();
+  window_type
+  active_win();
 
   void
   set_cbreak(
@@ -100,26 +104,28 @@ public:
   );
 };
 
-template <typename CharT, typename traits = std::char_traits<CharT> >
-class basic_iocurses_stream : public std::basic_iostream<CharT,traits>{
+template <typename charT, typename traits = std::char_traits<charT> >
+class basic_iocurses_stream : public std::basic_iostream<charT,traits>{
 public:
+  typedef basic_cursesbuf<charT,traits>::window_type window_type;
+
   basic_iocurses_stream(
-    basic_cursesbuf<CharT,traits> * _sb
-         = new basic_cursesbuf<CharT,traits>()
+    basic_cursesbuf<charT,traits> * _sb
+         = new basic_cursesbuf<charT,traits>()
   );
 
   ~basic_iocurses_stream();
 
-  basic_cursesbuf<CharT,traits> *
+  basic_cursesbuf<charT,traits> *
   rdbuf() const;
 
-  void
+  window_type
   set_win(
-    std::size_t
+    window_type
   );
 
-  std::size_t
-  total_win();
+  window_type
+  active_win();
 
   void
   set_cbreak(
@@ -136,7 +142,7 @@ public:
     bool _bool = true
   );
 
-  void
+  window_type
   new_win(
     int
   , int
@@ -146,11 +152,11 @@ public:
 
   void
   del_win(
-    std::size_t
+    window_type
   );
 
   void
-  set_border(CharT,CharT,CharT,CharT,CharT,CharT,CharT,CharT);
+  set_border(charT,charT,charT,charT,charT,charT,charT,charT);
 };
 
 typedef basic_ocurses_stream<char> ocurses_stream;

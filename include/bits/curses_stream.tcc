@@ -10,221 +10,253 @@
 
 namespace curstream {
 /* basic_ocurses_stream ctor */
-template <typename CharT, typename traits>
-basic_ocurses_stream<CharT,traits>::basic_ocurses_stream(
-  basic_cursesbuf<CharT,traits> * _buf
+template <typename charT, typename traits>
+basic_ocurses_stream<charT,traits>::basic_ocurses_stream(
+  basic_cursesbuf<charT,traits> * _buf
 )
-	: std::basic_ostream<CharT,traits>(_buf){
+	: std::basic_ostream<charT,traits>(_buf){
 }
 
 /* basic_ocurses_stream dtor */
-template <typename CharT, typename traits>
-basic_ocurses_stream<CharT,traits>::~basic_ocurses_stream(
+template <typename charT, typename traits>
+basic_ocurses_stream<charT,traits>::~basic_ocurses_stream(
 ){
 }
 
-/* basic_curses_stream rdbuf*/
-template <typename CharT, typename traits>
-basic_cursesbuf<CharT,traits> *
-basic_ocurses_stream<CharT,traits>::rdbuf(
+/* ocurses_stream rdbuf*/
+template <typename charT, typename traits>
+basic_cursesbuf<charT,traits> *
+basic_ocurses_stream<charT,traits>::rdbuf(
 ) const {
-return static_cast<basic_cursesbuf<CharT>*>(
-    std::basic_ostream<CharT,traits>::rdbuf()
+return static_cast<basic_cursesbuf<charT>*>(
+    std::basic_ostream<charT,traits>::rdbuf()
   );
 }
 
-template <typename CharT, typename traits>
-void
-basic_ocurses_stream<CharT,traits>::set_win(
-  std::size_t _win
+/* ocurses_stream set_win */
+template <typename charT, typename traits>
+basic_ocurses_stream<charT,traits>::window_type
+basic_ocurses_stream<charT,traits>::set_win(
+  basic_ocurses_stream<charT,traits>::window_type _win
 ){
-auto sb = static_cast<basic_cursesbuf<CharT,traits>*>(
-    std::basic_ostream<CharT,traits>::rdbuf()
+auto sb = static_cast<basic_cursesbuf<charT,traits>*>(
+    std::basic_ostream<charT,traits>::rdbuf()
   );
-sb->set_win(_win);
+return sb->set_win(_win);
 }
 
-template <typename CharT, typename traits>
-void
-basic_ocurses_stream<CharT,traits>::new_win(
+/* ocurses_stream new_win */
+template <typename charT, typename traits>
+basic_ocurses_stream<charT,traits>::window_type
+basic_ocurses_stream<charT,traits>::new_win(
   int _lines
 , int _cols
 , int _y
 , int _x
 ){
-(static_cast<basic_cursesbuf<CharT,traits>*>(std::basic_ostream<CharT,traits>::rdbuf()))->new_win(_lines, _cols, _y, _x);
+return (static_cast<basic_cursesbuf<charT,traits>*>(
+          std::basic_ostream<charT,traits>::rdbuf())
+       )->new_win(_lines, _cols, _y, _x);
 }
 
-template <typename CharT, typename traits>
+/* ocurses_stream del_win */
+template <typename charT, typename traits>
 void
-basic_ocurses_stream<CharT,traits>::del_win(
-  std::size_t _index
+basic_ocurses_stream<charT,traits>::del_win(
+  basic_ocurses_stream _win
 ){
-(static_cast<basic_cursesbuf<CharT,traits>*>(this->rdbuf()))->del_win(_index);
+(static_cast<basic_cursesbuf<charT,traits>*>(this->rdbuf())
+   )->del_win(_win);
 }
 
-template <typename CharT, typename traits>
+/* ocurses_stream set_border */
+template <typename charT, typename traits>
 void
-basic_ocurses_stream<CharT,traits>::set_border(
-  CharT _left
-, CharT _right
-, CharT _top
-, CharT _bottom
-, CharT _00c
-, CharT _01c
-, CharT _10c
-, CharT _11c
+basic_ocurses_stream<charT,traits>::set_border(
+  charT _left
+, charT _right
+, charT _top
+, charT _bottom
+, charT _00c
+, charT _01c
+, charT _10c
+, charT _11c
 ){
-(static_cast<basic_cursesbuf<CharT,traits>*>(this->rdbuf()))->set_border(_left, _right, _top, _bottom, _00c, _01c, _10c, _11c);
+(static_cast<basic_cursesbuf<charT,traits>*>(this->rdbuf()))->set_border(_left, _right, _top, _bottom, _00c, _01c, _10c, _11c);
 }
 
 /* basic_icurses_stream ctor */
-template <typename CharT, typename traits>
-basic_icurses_stream<CharT,traits>::basic_icurses_stream(
-  basic_cursesbuf<CharT,traits>* _sb
+template <typename charT, typename traits>
+basic_icurses_stream<charT,traits>::basic_icurses_stream(
+  basic_cursesbuf<charT,traits> * _sb
 )
-	: std::basic_istream<CharT,traits>(_sb){
+	: std::basic_istream<charT,traits>(_sb){
 }
 
 /* basic_icurses_stream dtor */
-template <typename CharT, typename traits>
-basic_icurses_stream<CharT,traits>::~basic_icurses_stream(
+template <typename charT, typename traits>
+basic_icurses_stream<charT,traits>::~basic_icurses_stream(
 ){
 }
 
 /* basic_icurses_stream set_win */
-template <typename CharT, typename traits>
-void
-basic_icurses_stream<CharT,traits>::set_win(
-  std::size_t _index
+template <typename charT, typename traits>
+basic_icurses_stream<charT,traits>::window_type
+basic_icurses_stream<charT,traits>::set_win(
+  window_type _index
 ){
-(static_cast<basic_cursesbuf<CharT,traits>*>(this->rdbuf()))->set_win(_index);
+return (static_cast<basic_cursesbuf<charT,traits> *>(this->rdbuf()))
+       ->set_win(_index);
 }
 
-template <typename CharT, typename traits>
-std::size_t
-basic_icurses_stream<CharT,traits>::total_win(
+/* icurses_stream active_win */
+template <typename charT, typename traits>
+basic_icurses_stream<charT,traits>::window_type
+basic_icurses_stream<charT,traits>::active_win(
 ){
-return (static_cast<basic_cursesbuf<CharT,traits>*>(this->rdbuf()))->totatl_win();
+return (static_cast<basic_cursesbuf<charT,traits>*>(this->rdbuf()))
+       ->active_win();
 }
 
-template <typename CharT, typename traits>
+/* icurses_stream set_cbreak */
+template <typename charT, typename traits>
 void
-basic_icurses_stream<CharT,traits>::set_cbreak(
+basic_icurses_stream<charT,traits>::set_cbreak(
   bool _bool
 ){
-(static_cast<basic_cursesbuf<CharT,traits>*>(this->rdbuf()))->set_cbreak(_bool);
+(static_cast<basic_cursesbuf<charT,traits>*>(this->rdbuf()))
+->set_cbreak(_bool);
 }
 
-template <typename CharT, typename traits>
+/* icurses_stream set_echo */
+template <typename charT, typename traits>
 void
-basic_icurses_stream<CharT,traits>::set_echo(
+basic_icurses_stream<charT,traits>::set_echo(
   bool _bool
 ){
-(static_cast<basic_cursesbuf<CharT,traits>*>(this->rdbuf()))->set_echo(_bool);
+(static_cast<basic_cursesbuf<charT,traits>*>(this->rdbuf()))
+->set_echo(_bool);
 }
 
 /* basic_icurses_stream set_keypad */
-template <typename CharT, typename traits>
+template <typename charT, typename traits>
 void
-basic_icurses_stream<CharT,traits>::set_keypad(
+basic_icurses_stream<charT,traits>::set_keypad(
   bool _bool
 ){
-(static_cast<basic_cursesbuf<CharT,traits>*>(this->rdbuf()))->set_keypad(_bool);
+(static_cast<basic_cursesbuf<charT,traits>*>(this->rdbuf()))
+->set_keypad(_bool);
 }
 
 /* basic_iocurses_stream ctor */
-template <typename CharT, typename traits>
-basic_iocurses_stream<CharT,traits>::basic_iocurses_stream(
-  basic_cursesbuf<CharT,traits>* _sb
+template <typename charT, typename traits>
+basic_iocurses_stream<charT,traits>::basic_iocurses_stream(
+  basic_cursesbuf<charT,traits>* _sb
 )
-	: std::basic_iostream<CharT,traits>(_sb){
+	: std::basic_iostream<charT,traits>(_sb){
 }
 
 /* basic_iocurses_stream dtor */
-template <typename CharT, typename traits>
-basic_iocurses_stream<CharT,traits>::~basic_iocurses_stream(
+template <typename charT, typename traits>
+basic_iocurses_stream<charT,traits>::~basic_iocurses_stream(
 ){
 }
 
-template <typename CharT, typename traits>
-basic_cursesbuf<CharT,traits> *
-basic_iocurses_stream<CharT,traits>::rdbuf(
+/* iocurses_stream rdbuf */
+template <typename charT, typename traits>
+basic_cursesbuf<charT,traits> *
+basic_iocurses_stream<charT,traits>::rdbuf(
 ) const {
-return static_cast<basic_cursesbuf<CharT,traits>*>(std::basic_iostream<CharT,traits>::rdbuf());
+return static_cast<basic_cursesbuf<charT,traits>*>(std::basic_iostream<charT,traits>::rdbuf());
 }
 
-template <typename CharT, typename traits>
-void
-basic_iocurses_stream<CharT,traits>::set_win(
-  std::size_t _index
+/* iocurses_stream set_win */
+template <typename charT, typename traits>
+basic_iocurses_stream<charT,triats>::window_type
+basic_iocurses_stream<charT,traits>::set_win(
+  basic_iocurses_stream<charT>,traits::window_type _index
 ){
-(static_cast<basic_cursesbuf<CharT,traits>*>(this->rdbuf()))->set_win(_index);
+return (static_cast<basic_cursesbuf<charT,traits>*>(this->rdbuf()))
+       ->set_win(_index);
 }
 
-template <typename CharT, typename traits>
-std::size_t
-basic_iocurses_stream<CharT,traits>::total_win(
+/* iocurses_stream active_win */
+template <typename charT, typename traits>
+basic_iocurses_stream<charT,traits>::window_type
+basic_iocurses_stream<charT,traits>::active_win(
 ){
-return (static_cast<basic_cursesbuf<CharT,traits>*>(this->rdbuf()))->totatl_win();
+return (static_cast<basic_cursesbuf<charT,traits>*>(this->rdbuf()))
+       ->active_win();
 }
 
-template <typename CharT, typename traits>
+/* iocurses_stream set_cbreak */
+template <typename charT, typename traits>
 void
-basic_iocurses_stream<CharT,traits>::set_cbreak(
+basic_iocurses_stream<charT,traits>::set_cbreak(
   bool _bool
 ){
-(static_cast<basic_cursesbuf<CharT,traits>*>(this->rdbuf()))->set_cbreak(_bool);
+(static_cast<basic_cursesbuf<charT,traits>*>(this->rdbuf()))
+->set_cbreak(_bool);
 }
 
-template <typename CharT, typename traits>
+/* iocurses_stream set_echo */
+template <typename charT, typename traits>
 void
-basic_iocurses_stream<CharT,traits>::set_echo(
+basic_iocurses_stream<charT,traits>::set_echo(
   bool _bool
 ){
-(static_cast<basic_cursesbuf<CharT,traits>*>(this->rdbuf()))->set_echo(_bool);
+(static_cast<basic_cursesbuf<charT,traits>*>(this->rdbuf()))
+->set_echo(_bool);
 }
 
-template <typename CharT, typename traits>
+/* iocurses_stream set_keypad */
+template <typename charT, typename traits>
 void
-basic_iocurses_stream<CharT,traits>::set_keypad(
+basic_iocurses_stream<charT,traits>::set_keypad(
   bool _bool
 ){
-(static_cast<basic_cursesbuf<CharT,traits>*>(this->rdbuf()))->set_keypad(_bool);
+(static_cast<basic_cursesbuf<charT,traits>*>(this->rdbuf()))
+->set_keypad(_bool);
 }
 
-template <typename CharT, typename traits>
-void
-basic_iocurses_stream<CharT,traits>::new_win(
+/* iocurses_stream new_win */
+template <typename charT, typename traits>
+basic_iocurses_stream<charT,traits>::window_type
+basic_iocurses_stream<charT,traits>::new_win(
   int _lines
 , int _cols
 , int _y
 , int _x
 ){
-(static_cast<basic_cursesbuf<CharT,traits>*>(std::basic_ostream<CharT,traits>::rdbuf()))->new_win(_lines, _cols, _y, _x);
+return (static_cast<basic_cursesbuf<charT,traits>*>(
+         std::basic_ostream<charT,traits>::rdbuf())
+       )->new_win(_lines, _cols, _y, _x);
 }
 
-template <typename CharT, typename traits>
+/* iocurses_stream del_win */
+template <typename charT, typename traits>
 void
-basic_iocurses_stream<CharT,traits>::del_win(
-  std::size_t _index
+basic_iocurses_stream<charT,traits>::del_win(
+  basic_iocurses_stream<charT,traits>::window_type _index
 ){
-(static_cast<basic_cursesbuf<CharT,traits>*>(this->rdbuf()))->del_win(_index);
+(static_cast<basic_cursesbuf<charT,traits>*>(this->rdbuf()))->del_win(_index);
 }
 
-template <typename CharT, typename traits>
+/* iocurses_stream set_border */
+template <typename charT, typename traits>
 void
-basic_iocurses_stream<CharT,traits>::set_border(
-  CharT _left
-, CharT _right
-, CharT _top
-, CharT _bottom
-, CharT _00c
-, CharT _01c
-, CharT _10c
-, CharT _11c
+basic_iocurses_stream<charT,traits>::set_border(
+  charT _left
+, charT _right
+, charT _top
+, charT _bottom
+, charT _00c
+, charT _01c
+, charT _10c
+, charT _11c
 ){
-(static_cast<basic_cursesbuf<CharT,traits>*>(this->rdbuf()))->set_border(_left, _right, _top, _bottom, _00c, _01c, _10c, _11c);
+(static_cast<basic_cursesbuf<charT,traits>*>(this->rdbuf()))
+->set_border(_left, _right, _top, _bottom, _00c, _01c, _10c, _11c);
 }
 
 } /* curstream */
