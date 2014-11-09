@@ -1,4 +1,4 @@
-Ncurses Stream
+Curses Stream
 ==========================================================================
 Status: Open Alpha Devoplment
 
