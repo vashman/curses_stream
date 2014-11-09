@@ -37,13 +37,14 @@ curses_stream io2(new cursesbuf());
 [example: window.cpp](../example/window.cpp)
 
 ```c++
-strm.new_win(0,0,0,0);
+window = strm.new_win(0,0,0,0);
 ```
 2 Setting a Window
 --------------------------------------------------------------------------
 [example: window.cpp](../example/window.cpp)
 
 ```c++
+io.set_win(window);
 ```
 
 3 Deleting a Window
@@ -51,6 +52,7 @@ strm.new_win(0,0,0,0);
 [example: window.cpp](../example/window.cpp)
 
 ```c++
+io.del_win(window);
 ```
 
 4 Setting window border
@@ -58,4 +60,5 @@ strm.new_win(0,0,0,0);
 [example: window.cpp](../example/window.cpp)
 
 ```c++
+io.set_border('1','2','3','4','5','6','7', '8');
 ```
