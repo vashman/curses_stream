@@ -13,29 +13,31 @@ extern "C"{
 }
 #include <ios>
 #include <streambuf>
-#include <vector>
 
 namespace curstream {
 
-template <typename CharT, typename traits = std::char_traits<CharT> >
-class basic_cursesbuf : public std::basic_streambuf<CharT, traits>{
+template <typename charT, typename traits = std::char_traits<charT> >
+class basic_cursesbuf : public std::basic_streambuf<charT, traits>{
 public:
+  /* windows are raw pointers to lib structs */
+  typedef WINDOW * window_type;
+
   basic_cursesbuf();
 
 #if __cplusplus >= 201103L
   basic_cursesbuf(
-    basic_cursesbuf<CharT,traits> const &
+    basic_cursesbuf<charT,traits> const &
   ) = delete;
 
   basic_cursesbuf &
   operator=(
-    basic_cursesbuf<CharT,traits> const &
+    basic_cursesbuf<charT,traits> const &
   ) = delete;
 #endif
 
   ~basic_cursesbuf();
 
-  std::size_t
+  window_type
   new_win(
     int
   , int
@@ -43,21 +45,22 @@ public:
   , int
   );
 
+  window_type
+  active_win(
+  );
+
   /* set_win
   set window return previous window id.
   */
-  std::size_t
+  window_type
   set_win(
-    std::size_t
+    window_type
   );
 
   void
   del_win(
-    std::size_t
+    window_type
   );
-
-  std::size_t
-  total_win();
 
   void
   set_cbreak(
@@ -76,14 +79,14 @@ public:
 
   void
   set_border(
-    CharT
-  , CharT
-  , CharT
-  , CharT
-  , CharT
-  , CharT
-  , CharT
-  , CharT
+    charT
+  , charT
+  , charT
+  , charT
+  , charT
+  , charT
+  , charT
+  , charT
   );
 
 private:
@@ -91,55 +94,54 @@ private:
 //	virtual void imbue(const locale&);
 //	virtual basic_streambuf* setbuf();
 
-  virtual typename std::basic_streambuf<CharT,traits>::pos_type
+  virtual typename std::basic_streambuf<charT,traits>::pos_type
   seekoff(
-    typename std::basic_streambuf<CharT, traits>::off_type
+    typename std::basic_streambuf<charT, traits>::off_type
   , std::ios_base::seekdir
   , std::ios_base::openmode
   );
 
-  virtual typename std::basic_streambuf<CharT,traits>::pos_type
+  virtual typename std::basic_streambuf<charT,traits>::pos_type
   seekpos(
-    typename std::basic_streambuf<CharT, traits>::pos_type
+    typename std::basic_streambuf<charT, traits>::pos_type
   , std::ios_base::openmode
   );
 
-// always fails virtual typename basic_streambuf<CharT,traits>::int_type pbackfail(typename basic_streambuf<CharT, traits>::int_type c = typename basic_streambuf<CharT, traits>::traits_type::eof());
+// always fails virtual typename basic_streambuf<charT,traits>::int_type pbackfail(typename basic_streambuf<charT, traits>::int_type c = typename basic_streambuf<charT, traits>::traits_type::eof());
 
-  virtual typename std::basic_streambuf<CharT,traits>::int_type
+  virtual typename std::basic_streambuf<charT,traits>::int_type
   sync();
 
-  virtual typename std::basic_streambuf<CharT,traits>::int_type
+  virtual typename std::basic_streambuf<charT,traits>::int_type
   overflow(
-    typename std::basic_streambuf<CharT, traits>::int_type
+    typename std::basic_streambuf<charT, traits>::int_type
   );
 
   virtual std::streamsize
   xsputn(
-    const typename std::basic_streambuf<CharT,traits>::char_type *
+    const typename std::basic_streambuf<charT,traits>::char_type *
   , std::streamsize
   );
 
-  virtual typename std::basic_streambuf<CharT,traits>::int_type
+  virtual typename std::basic_streambuf<charT,traits>::int_type
   underflow();
 
-  virtual typename std::basic_streambuf<CharT,traits>::int_type
+  virtual typename std::basic_streambuf<charT,traits>::int_type
   uflow();
 
   virtual std::streamsize
   xsgetn(
-    typename std::basic_streambuf<CharT,traits>::char_type *
+    typename std::basic_streambuf<charT,traits>::char_type *
   , std::streamsize
   );
 
   static std::size_t active;
 
-  std::vector<WINDOW *> windows;
-
-  std::size_t active_win;
+  window_type active_win;
 };
 
 typedef basic_cursesbuf<char> cursesbuf;
+
 } /* curstream */
 #include "bits/cursesbuf.tcc"
 #endif
