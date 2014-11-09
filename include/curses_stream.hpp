@@ -16,7 +16,7 @@ namespace curstream {
 template <typename charT, typename traits = std::char_traits<charT> >
 class basic_ocurses_stream : public std::basic_ostream<charT,traits>{
 public:
-  typedef basic_cursesbuf<charT,traits>::window_type window_type;
+  typedef typename basic_cursesbuf<charT,traits>::window_type window_type;
 
   basic_ocurses_stream(
     basic_cursesbuf<charT,traits> * _buf
@@ -68,7 +68,7 @@ private:
 template <typename charT, typename traits = std::char_traits<charT> >
 class basic_icurses_stream : public std::basic_istream<charT,traits>{
 public:
-  typedef basic_cursesbuf<charT,traits>::window_type window_type;
+  typedef typename basic_cursesbuf<charT,traits>::window_type window_type;
 
   basic_icurses_stream(
     basic_cursesbuf<charT,traits> * _buf
@@ -107,7 +107,7 @@ public:
 template <typename charT, typename traits = std::char_traits<charT> >
 class basic_iocurses_stream : public std::basic_iostream<charT,traits>{
 public:
-  typedef basic_cursesbuf<charT,traits>::window_type window_type;
+  typedef typename basic_cursesbuf<charT,traits>::window_type window_type;
 
   basic_iocurses_stream(
     basic_cursesbuf<charT,traits> * _sb

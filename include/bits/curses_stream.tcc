@@ -35,7 +35,7 @@ return static_cast<basic_cursesbuf<charT>*>(
 
 /* ocurses_stream set_win */
 template <typename charT, typename traits>
-basic_ocurses_stream<charT,traits>::window_type
+typename basic_ocurses_stream<charT,traits>::window_type
 basic_ocurses_stream<charT,traits>::set_win(
   basic_ocurses_stream<charT,traits>::window_type _win
 ){
@@ -47,7 +47,7 @@ return sb->set_win(_win);
 
 /* ocurses_stream new_win */
 template <typename charT, typename traits>
-basic_ocurses_stream<charT,traits>::window_type
+typename basic_ocurses_stream<charT,traits>::window_type
 basic_ocurses_stream<charT,traits>::new_win(
   int _lines
 , int _cols
@@ -63,7 +63,7 @@ return (static_cast<basic_cursesbuf<charT,traits>*>(
 template <typename charT, typename traits>
 void
 basic_ocurses_stream<charT,traits>::del_win(
-  basic_ocurses_stream _win
+  typename basic_ocurses_stream<charT,traits>::window_type _win
 ){
 (static_cast<basic_cursesbuf<charT,traits>*>(this->rdbuf())
    )->del_win(_win);
@@ -101,7 +101,7 @@ basic_icurses_stream<charT,traits>::~basic_icurses_stream(
 
 /* basic_icurses_stream set_win */
 template <typename charT, typename traits>
-basic_icurses_stream<charT,traits>::window_type
+typename basic_icurses_stream<charT,traits>::window_type
 basic_icurses_stream<charT,traits>::set_win(
   window_type _index
 ){
@@ -111,7 +111,7 @@ return (static_cast<basic_cursesbuf<charT,traits> *>(this->rdbuf()))
 
 /* icurses_stream active_win */
 template <typename charT, typename traits>
-basic_icurses_stream<charT,traits>::window_type
+typename basic_icurses_stream<charT,traits>::window_type
 basic_icurses_stream<charT,traits>::active_win(
 ){
 return (static_cast<basic_cursesbuf<charT,traits>*>(this->rdbuf()))
@@ -172,9 +172,9 @@ return static_cast<basic_cursesbuf<charT,traits>*>(std::basic_iostream<charT,tra
 
 /* iocurses_stream set_win */
 template <typename charT, typename traits>
-basic_iocurses_stream<charT,triats>::window_type
+typename basic_iocurses_stream<charT,traits>::window_type
 basic_iocurses_stream<charT,traits>::set_win(
-  basic_iocurses_stream<charT>,traits::window_type _index
+  typename basic_iocurses_stream<charT,traits>::window_type _index
 ){
 return (static_cast<basic_cursesbuf<charT,traits>*>(this->rdbuf()))
        ->set_win(_index);
@@ -182,7 +182,7 @@ return (static_cast<basic_cursesbuf<charT,traits>*>(this->rdbuf()))
 
 /* iocurses_stream active_win */
 template <typename charT, typename traits>
-basic_iocurses_stream<charT,traits>::window_type
+typename basic_iocurses_stream<charT,traits>::window_type
 basic_iocurses_stream<charT,traits>::active_win(
 ){
 return (static_cast<basic_cursesbuf<charT,traits>*>(this->rdbuf()))
@@ -221,7 +221,7 @@ basic_iocurses_stream<charT,traits>::set_keypad(
 
 /* iocurses_stream new_win */
 template <typename charT, typename traits>
-basic_iocurses_stream<charT,traits>::window_type
+typename basic_iocurses_stream<charT,traits>::window_type
 basic_iocurses_stream<charT,traits>::new_win(
   int _lines
 , int _cols

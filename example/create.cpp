@@ -14,6 +14,6 @@ curses_stream io2;
 
 /* create stream by passing cursesbuf */
 cursesbuf buf;
-curses_stream io2(buf);
+curses_stream io3(& buf);
 return 0;
 }

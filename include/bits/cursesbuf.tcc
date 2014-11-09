@@ -55,7 +55,7 @@ wborder(this->win
 
 /* basic_cursesbuf active_win */
 template <typename charT, typename traits>
-basic_cursesbuf<charT,traits>::window_type
+typename basic_cursesbuf<charT,traits>::window_type
 basic_cursesbuf<charT,traits>::active_win(
 ){
 return this->win;
@@ -98,7 +98,7 @@ keypad(this->init_win, static_cast<int>(_b));
 
 /* basic_cursesbuf new_win */
 template <typename charT, typename traits>
-basic_cursesbuf<charT,traits>::window_type
+typename basic_cursesbuf<charT,traits>::window_type
 basic_cursesbuf<charT,traits>::new_win(
   int _lines
 , int _cols
@@ -122,14 +122,14 @@ swaps the active window with window parameter and returns
 previous window
 */
 template <typename charT, typename traits>
-basic_cursesbuf<charT,traits>::window_type
+typename basic_cursesbuf<charT,traits>::window_type
 basic_cursesbuf<charT,traits>::set_win(
   basic_cursesbuf<charT,traits>::window_type _win
 ){
 basic_cursesbuf<charT,traits>::window_type temp = this->win;
 this->win =  _win;
-_index = this->win;
-return _index;
+_win = this->win;
+return _win;
 }
 
 /* basic_cursesbuf sync */
