@@ -21,6 +21,7 @@ basic_cursesbuf<charT,traits>::basic_cursesbuf(
   : std::basic_streambuf<charT,traits>() {
 	if (basic_cursesbuf<charT,traits>::active < 1){
 	this->active_win = initscr();
+  this->init_win = this->active_win;
 	}
 ++basic_cursesbuf<charT,traits>::active;
 }
@@ -92,7 +93,7 @@ void
 basic_cursesbuf<charT,traits>::set_keypad(
   bool _b
 ){
-keypad(this->windows[0], static_cast<int>(_b));
+keypad(this->init_win, static_cast<int>(_b));
 }
 
 /* basic_cursesbuf new_win */

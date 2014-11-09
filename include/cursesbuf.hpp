@@ -138,6 +138,8 @@ private:
   static std::size_t active;
 
   window_type active_win;
+
+  window_type init_win;
 };
 
 typedef basic_cursesbuf<char> cursesbuf;
