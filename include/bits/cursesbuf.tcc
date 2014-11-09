@@ -50,7 +50,8 @@ basic_cursesbuf<charT,traits>::set_border(
 , charT _11c
 ){
 wborder(this->win
-  , _left, _right, _top, _bottom, _00c, _01c, _10c, _11c);
+  , static_cast<chtype>(_left), static_cast<chtype>(_right), static_cast<chtype>(_top), static_cast<chtype>(_bottom)
+, static_cast<chtype>(_00c), static_cast<chtype>(_01c), static_cast<chtype>(_10c), static_cast<chtype>(_11c));
 }
 
 /* basic_cursesbuf active_win */
