@@ -8,11 +8,9 @@
 #ifndef CURSTREAM_CURSESBUF_HPP
 #define CURSTREAM_CURSESBUF_HPP
 
-extern "C"{
-#include <ncurses.h>
-}
 #include <ios>
 #include <streambuf>
+#include "bits/window.hpp"
 
 namespace curstream {
 
@@ -20,7 +18,7 @@ template <typename charT, typename traits = std::char_traits<charT> >
 class basic_cursesbuf : public std::basic_streambuf<charT, traits>{
 public:
   /* windows are raw pointers to lib structs */
-  typedef WINDOW * window_type;
+  typedef curstream::bits::window window_type;
 
   basic_cursesbuf();
 
@@ -75,18 +73,6 @@ public:
   void
   set_keypad(
     bool
-  );
-
-  void
-  set_border(
-    charT
-  , charT
-  , charT
-  , charT
-  , charT
-  , charT
-  , charT
-  , charT
   );
 
 private:

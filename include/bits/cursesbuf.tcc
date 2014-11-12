@@ -8,6 +8,10 @@
 #ifndef CURSTREAM_CURSESBUF_TCC
 #define CURSTREAM_CURSESBUF_TCC
 
+extern "C"{
+#include <ncurses.h>
+}
+
 namespace curstream {
 
 /* basic_cursesbuf active */
@@ -19,9 +23,10 @@ template <typename charT, typename traits>
 basic_cursesbuf<charT,traits>::basic_cursesbuf(
 )
   : std::basic_streambuf<charT,traits>() {
-	if (basic_cursesbuf<charT,traits>::active < 1){
-	this->win = initscr();
-  this->init_win = this->win;
+	if (basic_cursesbuf<charT,traits>::active == 0){
+  initscr();
+//  this->init_win = stdscr;
+//  this->win = stdscr;
 	}
 ++basic_cursesbuf<charT,traits>::active;
 }
@@ -129,7 +134,7 @@ basic_cursesbuf<charT,traits>::set_win(
 ){
 basic_cursesbuf<charT,traits>::window_type temp = this->win;
 this->win =  _win;
-_win = this->win;
+_win = temp;
 return _win;
 }
 
