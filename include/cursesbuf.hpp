@@ -48,11 +48,6 @@ public:
   );
 
   void
-  del_win(
-    window_type
-  );
-
-  void
   set_cbreak(
     bool
   );

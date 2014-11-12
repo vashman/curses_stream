@@ -84,15 +84,6 @@ basic_cursesbuf<charT,traits>::set_keypad(
 keypad(this->init_win, static_cast<int>(_b));
 }
 
-/* basic_cursesbuf del_win */
-template <typename charT, typename traits>
-void
-basic_cursesbuf<charT,traits>::del_win(
-  basic_cursesbuf<charT,traits>::window_type _win
-){
-delwin(_win);
-}
-
 /* basic_cursesbuf set_win
 swaps the active window with window parameter and returns
 previous window

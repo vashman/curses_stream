@@ -44,7 +44,7 @@ public:
   ) = default;
 
   ~window(
-  ) = default;
+  );
 
   template <typename charT>
   void
@@ -86,6 +86,12 @@ window::window(
   window const & _win
 ){
 this->win = newwin(_win.lines, _win.cols, _win.y, _win.x);
+}
+
+/* window dtor */
+window::~window(
+){
+delwin(this->win);
 }
 
 /* window copy operator */
