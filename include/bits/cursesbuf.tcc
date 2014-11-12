@@ -84,18 +84,6 @@ basic_cursesbuf<charT,traits>::set_keypad(
 keypad(this->init_win, static_cast<int>(_b));
 }
 
-/* basic_cursesbuf new_win */
-template <typename charT, typename traits>
-typename basic_cursesbuf<charT,traits>::window_type
-basic_cursesbuf<charT,traits>::new_win(
-  int _lines
-, int _cols
-, int _y
-, int _x
-){
-return newwin(_lines, _cols, _y, _x);
-}
-
 /* basic_cursesbuf del_win */
 template <typename charT, typename traits>
 void

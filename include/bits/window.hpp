@@ -19,6 +19,10 @@ namespace bits {
 class window{
 public:
   window(
+    int
+  , int
+  , int
+  , int
   );
 
   window(
@@ -59,19 +63,29 @@ public:
 
 private:
   WINDOW * win;
+
+  int lines, cols, y, x
 };
 
 /* window ctor */
 window::window(
-){
-this->win = newwin();
+  int _lines 
+, int _cols
+, int _y
+, int _x
+)
+  : lines (_lines)
+  , cols (_cols)
+  , y (_y)
+  , x (_x) {
+this->win = newwin(_lines, _cols, _y, _x);
 }
 
 /* window copy ctor */
 window::window(
   window const & _win
 ){
-this->win = newwin();
+this->win = newwin(_win.lines, _win.cols, _win.y, _win.x);
 }
 
 /* window copy operator */

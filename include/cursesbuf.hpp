@@ -36,14 +36,6 @@ public:
   ~basic_cursesbuf();
 
   window_type
-  new_win(
-    int
-  , int
-  , int
-  , int
-  );
-
-  window_type
   active_win(
   );
 
