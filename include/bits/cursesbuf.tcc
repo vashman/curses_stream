@@ -41,24 +41,6 @@ basic_cursesbuf<charT,traits>::~basic_cursesbuf(
 	}
 }
 
-/* basic_cursesbuf set_border */
-template <typename charT, typename traits>
-void
-basic_cursesbuf<charT,traits>::set_border(
-  charT _left
-, charT _right
-, charT _top
-, charT _bottom
-, charT _00c
-, charT _01c
-, charT _10c
-, charT _11c
-){
-wborder(this->win
-  , static_cast<chtype>(_left), static_cast<chtype>(_right), static_cast<chtype>(_top), static_cast<chtype>(_bottom)
-, static_cast<chtype>(_00c), static_cast<chtype>(_01c), static_cast<chtype>(_10c), static_cast<chtype>(_11c));
-}
-
 /* basic_cursesbuf active_win */
 template <typename charT, typename traits>
 typename basic_cursesbuf<charT,traits>::window_type

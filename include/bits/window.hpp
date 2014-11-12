@@ -43,6 +43,7 @@ public:
   ~window(
   ) = default;
 
+  template <typename charT>
   void
   set_border(
     charT
@@ -68,6 +69,27 @@ window::window(
   if (_ptr != nullptr){
   this->win = _ptr;
   }
+}
+
+/* window set_border */
+template <typename charT>
+void
+window::set_border(
+  charT _left
+, charT _right
+, charT _top
+, charT _bottom
+, charT _00c
+, charT _01c
+, charT _10c
+, charT _11c
+){
+wborder(this->win
+  , static_cast<chtype>(_left), static_cast<chtype>(_right)
+  , static_cast<chtype>(_top), static_cast<chtype>(_bottom)
+  , static_cast<chtype>(_00c), static_cast<chtype>(_01c)
+  , static_cast<chtype>(_10c), static_cast<chtype>(_11c)
+);
 }
 
 } /* bits */ } /* curstream */
