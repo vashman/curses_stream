@@ -19,17 +19,16 @@ namespace bits {
 class window{
 public:
   window(
-    WINDOW *
   );
 
   window(
     window const &
-  ) = default;
+  );
 
   window &
   operator=(
     window const &
-  ) = default;
+  );
 
   window(
     window &&
@@ -64,11 +63,24 @@ private:
 
 /* window ctor */
 window::window(
-  WINDOW * _ptr
 ){
-  if (_ptr != nullptr){
-  this->win = _ptr;
-  }
+this->win = newwin();
+}
+
+/* window copy ctor */
+window::window(
+  window const & _win
+){
+this->win = newwin();
+}
+
+/* window copy operator */
+window &
+window::operator(
+  window const & _win
+){
+this->win = newwin();
+return *this;
 }
 
 /* window set_border */
